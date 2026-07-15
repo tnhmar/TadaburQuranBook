@@ -1,6 +1,17 @@
 %% ============================================================
 %%  PREAMBLE — كتاب تدبر القرآن الكريم
-%%  Arabic RTL book — XeLaTeX required.
+%%
+%%  Professional Islamic book typesetting — XeLaTeX required.
+%%  Inspired by: دار الفكر، دار ابن حزم، مكتبة المعارف
+%%
+%%  Fonts required (all in TeX Live full):
+%%    • Scheherazade New   — Quranic text (uthmani script)
+%%    • Amiri              — Arabic body text
+%%    • TeX Gyre Termes    — Latin/English fallback
+%%
+%%  Packages required:
+%%    • quran  (CTAN: macros/unicodetex/latex/quran)
+%%
 %%  Input ONCE from Tex/main.tex.
 %% ============================================================
 
@@ -10,71 +21,134 @@
   openright
 ]{book}
 
-%% ── Language & RTL ──────────────────────────────────────────
-\usepackage{polyglossia}
-\setmainlanguage[numerals=maghrib]{arabic}
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+%% 1. LANGUAGE & RTL
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+\usepackage[no-math]{fontspec}
+\usepackage[quiet,nolocalmarks]{polyglossia}
+\setmainlanguage[
+  calendar         = gregorian,
+  numerals         = maghrib
+]{arabic}
 \setotherlanguage{english}
 
-%% ── Fonts ───────────────────────────────────────────────────
-\usepackage{fontspec}
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+%% 2. FONTS
+%%    Scheherazade New  → Quranic / uthmani text
+%%    Amiri             → body prose
+%%    TeX Gyre Termes   → English / Latin
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+%% Body font — Amiri (Naskh, classical book style)
 \setmainfont{Amiri}[
-  Script        = Arabic,
-  Language      = Default,
-  BoldFont      = Amiri Bold,
-  ItalicFont    = Amiri Italic,
-  BoldItalicFont= Amiri Bold Italic
+  Script         = Arabic,
+  Language       = Default,
+  BoldFont       = Amiri Bold,
+  ItalicFont     = Amiri Italic,
+  BoldItalicFont = Amiri Bold Italic,
+  Scale          = 1.0
 ]
 \newfontfamily\arabicfont[Script=Arabic]{Amiri}
-\newfontfamily\englishfont{TeX Gyre Termes}
 
-%% ── Page geometry ───────────────────────────────────────────
+%% Quranic font — Scheherazade New (designed for Uthmani Quran)
+\newfontfamily\quranfont[
+  Script   = Arabic,
+  Language = Default,
+  Scale    = 1.25           %% larger for reverence and readability
+]{Scheherazade New}
+
+%% Latin / English fallback
+\newfontfamily\englishfont{TeX Gyre Termes}
+\let\arabicfonttt\ttfamily
+
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+%% 3. QURAN PACKAGE
+%%    uthmani script + set Scheherazade as default quran font
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+\usepackage[uthmani]{quran}
+
+%% Route every \qurantext call through \quranfont
+\makeatletter
+\bidi@preto\qurantext{\quranfont}
+\makeatother
+
+%% Ayah marker style: classical ﴿٣﴾
+\SetAyahMarkerStyle
+  {\textcolor{AyahMarker}\bgroup\quranfont﴿}
+  {﴾\egroup}
+
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+%% 4. PAGE GEOMETRY
+%%    17×24 cm — standard Arab publishing house size
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 \usepackage{geometry}
 \geometry{
-  papersize  = {7in, 10in},
-  top        = 1in,
-  bottom     = 1.1in,
-  inner      = 1in,
-  outer      = 0.875in,
-  headheight = 23.07pt,
+  paperwidth  = 17cm,
+  paperheight = 24cm,
+  top         = 2.2cm,
+  bottom      = 2.5cm,
+  inner       = 2.4cm,    %% binding side — slightly wider
+  outer       = 1.8cm,
+  headheight  = 14pt,
+  headsep     = 10pt,
   twoside
 }
-\setlength{\headheight}{23.07004pt}
-\addtolength{\topmargin}{-0.00003pt}
 
-%% ── Colours ─────────────────────────────────────────────────
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+%% 5. COLOUR PALETTE
+%%    Islamic green + warm parchment tones
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 \usepackage{xcolor}
-\definecolor{BookGreen}      {HTML}{1A5C3A}
-\definecolor{BookDark}       {HTML}{1C1C1E}
-\definecolor{BookMid}        {HTML}{4A4A4A}
-\definecolor{LearnBg}        {HTML}{EEF7EE}
-\definecolor{LearnBorder}    {HTML}{27AE60}
-\definecolor{TipBg}          {HTML}{EAF4FB}
-\definecolor{TipBorder}      {HTML}{2980B9}
-\definecolor{WarningBg}      {HTML}{FEF9E7}
-\definecolor{WarningBorder}  {HTML}{F39C12}
-\definecolor{NoteBg}         {HTML}{F4F4F4}
-\definecolor{NoteBorder}     {HTML}{888888}
-\definecolor{TakeawayBg}     {HTML}{F0F0FF}
-\definecolor{TakeawayBorder} {HTML}{5B4FBE}
-\definecolor{AyahBg}         {HTML}{FFFDE7}
-\definecolor{AyahBorder}     {HTML}{C8A415}
 
-%% ── Typography ──────────────────────────────────────────────
+%% Primary
+\definecolor{BookGreen}       {HTML}{1A5C3A}   %% deep Islamic green
+\definecolor{BookGold}        {HTML}{8B6914}   %% muted gold
+\definecolor{BookDark}        {HTML}{1C1C1E}
+\definecolor{BookMid}         {HTML}{4A4A4A}
+\definecolor{BookLight}       {HTML}{F5F0E8}   %% warm parchment
+
+%% Ayah / Quranic
+\definecolor{AyahBg}          {HTML}{FDFAF2}   %% very light parchment
+\definecolor{AyahBorder}      {HTML}{C8A415}   %% gold border
+\definecolor{AyahMarker}      {HTML}{8B6914}   %% number brackets
+\definecolor{HizbBg}          {HTML}{F0F7F0}   %% soft green tint
+\definecolor{HizbBorder}      {HTML}{1A5C3A}
+
+%% Semantic boxes
+\definecolor{TadaburBg}       {HTML}{EEF7EE}
+\definecolor{TadaburBorder}   {HTML}{27AE60}
+\definecolor{TafsirBg}        {HTML}{EAF4FB}
+\definecolor{TafsirBorder}    {HTML}{1A6B9A}
+\definecolor{HidayaBg}        {HTML}{FEF9E7}
+\definecolor{HidayaBorder}    {HTML}{E67E22}
+\definecolor{NoteBg}          {HTML}{F4F4F4}
+\definecolor{NoteBorder}      {HTML}{888888}
+\definecolor{WarnBg}          {HTML}{FEF0F0}
+\definecolor{WarnBorder}      {HTML}{C0392B}
+\definecolor{TakeawayBg}      {HTML}{F0F0FF}
+\definecolor{TakeawayBorder}  {HTML}{5B4FBE}
+\definecolor{DuaBg}           {HTML}{F5F0FA}
+\definecolor{DuaBorder}       {HTML}{6C3483}
+
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+%% 6. TYPOGRAPHY
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 \usepackage{microtype}
-\usepackage{setspace}
-\setstretch{1.8}   %% Arabic text needs more leading
-
+\usepackage[doublespacing]{setspace}   %% Arabic books use generous leading
 \usepackage{csquotes}
 \usepackage{parskip}
-\setlength{\parskip}{8pt}
-\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0.5cm}          %% Islamic books indent paragraphs
 
-\widowpenalty=10000
-\clubpenalty=10000
+\widowpenalty  = 10000
+\clubpenalty   = 10000
 \raggedbottom
-\emergencystretch=3em
+\emergencystretch = 3em
 
-%% ── Headings ────────────────────────────────────────────────
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+%% 7. HEADINGS
+%%    Centred chapter titles (دار الفكر style)
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 \usepackage{needspace}
 \usepackage{etoolbox}
 \preto\section{\needspace{5\baselineskip}}
@@ -83,38 +157,57 @@
 \usepackage{titlesec}
 \renewcommand{\bottomtitlespace}{0.15\textheight}
 
+%% Part — large centred ornament
 \titleformat{\part}[display]
   {\centering\huge\bfseries\color{BookGreen}}
-  {\large\mdseries\partname\ \thepart}{20pt}{}
+  {\large\mdseries\color{BookGold}\partname{} \thepart}
+  {18pt}{}
 
-\titleformat{\chapter}[display]
-  {\huge\bfseries\color{BookGreen}}
-  {\normalsize\mdseries\chaptertitlename\ \thechapter}{12pt}{}
-\titlespacing*{\chapter}{0pt}{0pt}{24pt}
+%% Chapter — centred, green, rule below
+\titleformat{\chapter}[block]
+  {\centering\LARGE\bfseries\color{BookGreen}}
+  {\normalsize\mdseries\color{BookGold}\chaptertitlename{} \thechapter\quad\textcolor{BookGold}{◆}\quad}
+  {0pt}{}
+  [\vspace{6pt}{\color{BookGold}\hrule height 0.5pt}\vspace{4pt}]
+\titlespacing*{\chapter}{0pt}{10pt}{20pt}
 
+%% Section
 \titleformat{\section}
   {\Large\bfseries\color{BookGreen}}
   {\thesection}{1em}{}
-\titlespacing*{\section}{0pt}{18pt}{6pt}
+\titlespacing*{\section}{0pt}{16pt}{6pt}
 
+%% Subsection
 \titleformat{\subsection}
   {\large\bfseries\color{BookDark}}
   {\thesubsection}{1em}{}
-\titlespacing*{\subsection}{0pt}{14pt}{4pt}
+\titlespacing*{\subsection}{0pt}{12pt}{4pt}
 
-%% ── Headers & Footers ───────────────────────────────────────
+%% Subsubsection
+\titleformat{\subsubsection}
+  {\normalsize\bfseries\color{BookDark}}
+  {\thesubsubsection}{1em}{}
+\titlespacing*{\subsubsection}{0pt}{8pt}{2pt}
+
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+%% 8. HEADERS & FOOTERS
+%%    Book title on even pages, chapter title on odd
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[LE]{\small\color{BookMid}\leftmark}
+%% Even (left) page: book title
+\fancyhead[LE]{\small\color{BookMid}\textit{كتاب تدبر القرآن الكريم}}
+%% Odd (right) page: chapter/section name
 \fancyhead[RO]{\small\color{BookMid}\rightmark}
-\fancyfoot[LE,RO]{\small\color{BookMid}\thepage}
-\renewcommand{\headrulewidth}{0.3pt}
+%% Page number centred at foot
+\fancyfoot[C]{\small\color{BookMid}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0pt}
 
 \fancypagestyle{plain}{
   \fancyhf{}
-  \fancyfoot[LE,RO]{\small\color{BookMid}\thepage}
+  \fancyfoot[C]{\small\color{BookMid}\thepage}
   \renewcommand{\headrulewidth}{0pt}
 }
 
@@ -129,76 +222,185 @@
 }
 \makeatother
 
-%% ── Tables ──────────────────────────────────────────────────
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+%% 9. TABLES
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{array}
 \usepackage{longtable}
-\renewcommand{\arraystretch}{1.5}
+\renewcommand{\arraystretch}{1.6}
 
-%% ── Graphics ────────────────────────────────────────────────
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+%% 10. GRAPHICS
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{caption}
 \captionsetup{
   font      = {small},
-  labelfont = {bf,color=BookGreen},
+  labelfont = {bf, color=BookGreen},
   skip      = 6pt
 }
 
-%% ── Quranic verse box ───────────────────────────────────────
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+%% 11. TCOLORBOX — Islamic semantic boxes
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 \usepackage{tcolorbox}
-\tcbuselibrary{skins,breakable}
+\tcbuselibrary{skins, breakable}
 
-\newtcolorbox{ayahbox}[1][]{
-  colback=AyahBg, colframe=AyahBorder,
-  before skip=14pt, after skip=10pt,
-  fonttitle=\bfseries\small,
-  title={#1},
-  breakable, lines before break=3,
-  left=10pt, right=10pt, top=8pt, bottom=8pt,
-  boxrule=0.7pt, width=\linewidth,
-  halign=flush right
+%% ── نص الآية ──────────────────────────────────────
+%% Usage: \begin{ayahbox}{سورة البقرة: 1-5}  ...  \end{ayahbox}
+\newtcolorbox{ayahbox}[1]{
+  enhanced,
+  colback    = AyahBg,
+  colframe   = AyahBorder,
+  colbacktitle = AyahBorder,
+  coltitle   = white,
+  fonttitle  = \small\bfseries,
+  title      = {#1},
+  boxrule    = 0.8pt,
+  arc        = 3pt,
+  left       = 12pt, right = 12pt,
+  top        = 8pt,  bottom = 8pt,
+  before skip = 16pt, after skip = 12pt,
+  halign     = flush right,
+  breakable,
+  lines before break = 3,
+  width      = \linewidth
 }
 
-\newtcolorbox{tadaburbox}{
-  colback=LearnBg, colframe=LearnBorder,
-  before skip=12pt, fonttitle=\bfseries\small,
-  title={تدبر}, breakable, lines before break=3,
-  left=8pt, right=8pt, top=6pt, bottom=6pt,
-  boxrule=0.6pt, width=\linewidth
+%% ── نصف الحزب / الحزب ────────────────────────────
+%% Usage: \begin{hizbbox}{نصف الحزب الأول}  ...  \end{hizbbox}
+\newtcolorbox{hizbbox}[1]{
+  enhanced,
+  colback    = HizbBg,
+  colframe   = HizbBorder,
+  colbacktitle = HizbBorder,
+  coltitle   = white,
+  fonttitle  = \small\bfseries,
+  title      = {\centering #1},
+  boxrule    = 1pt,
+  arc        = 2pt,
+  left       = 10pt, right = 10pt,
+  top        = 6pt,  bottom = 6pt,
+  before skip = 14pt, after skip = 10pt,
+  breakable,
+  lines before break = 3,
+  width      = \linewidth
 }
-\newtcolorbox{notebox}{
-  colback=NoteBg, colframe=NoteBorder,
-  before skip=12pt, fonttitle=\bfseries\small,
-  title={ملاحظة}, breakable, lines before break=3,
-  left=8pt, right=8pt, top=6pt, bottom=6pt,
-  boxrule=0.6pt, width=\linewidth
+
+%% ── تدبر ──────────────────────────────────────────
+\newtcolorbox{tadaburbox}[1][تدبر]{
+  enhanced,
+  colback    = TadaburBg,
+  colframe   = TadaburBorder,
+  colbacktitle = TadaburBorder,
+  coltitle   = white,
+  fonttitle  = \small\bfseries,
+  title      = {#1},
+  boxrule    = 0.6pt, arc = 3pt,
+  left = 8pt, right = 8pt, top = 6pt, bottom = 6pt,
+  before skip = 12pt, after skip = 8pt,
+  breakable, lines before break = 3,
+  width = \linewidth
 }
-\newtcolorbox{warningbox}{
-  colback=WarningBg, colframe=WarningBorder,
-  before skip=12pt, fonttitle=\bfseries\small,
-  title={تنبيه}, breakable, lines before break=3,
-  left=8pt, right=8pt, top=6pt, bottom=6pt,
-  boxrule=0.6pt, width=\linewidth
+
+%% ── التفسير المعتمد ───────────────────────────────
+\newtcolorbox{tafsirbox}[1][التفسير المعتمد]{
+  enhanced,
+  colback    = TafsirBg,
+  colframe   = TafsirBorder,
+  colbacktitle = TafsirBorder,
+  coltitle   = white,
+  fonttitle  = \small\bfseries,
+  title      = {#1},
+  boxrule    = 0.6pt, arc = 3pt,
+  left = 8pt, right = 8pt, top = 6pt, bottom = 6pt,
+  before skip = 12pt, after skip = 8pt,
+  breakable, lines before break = 3,
+  width = \linewidth
 }
+
+%% ── الهدايات ──────────────────────────────────────
+\newtcolorbox{hidayabox}[1][الهدايات]{
+  enhanced,
+  colback    = HidayaBg,
+  colframe   = HidayaBorder,
+  colbacktitle = HidayaBorder,
+  coltitle   = white,
+  fonttitle  = \small\bfseries,
+  title      = {#1},
+  boxrule    = 0.6pt, arc = 3pt,
+  left = 8pt, right = 8pt, top = 6pt, bottom = 6pt,
+  before skip = 12pt, after skip = 8pt,
+  breakable, lines before break = 3,
+  width = \linewidth
+}
+
+%% ── ملاحظة ────────────────────────────────────────
+\newtcolorbox{notebox}[1][ملاحظة]{
+  enhanced,
+  colback = NoteBg, colframe = NoteBorder,
+  colbacktitle = NoteBorder, coltitle = white,
+  fonttitle = \small\bfseries, title = {#1},
+  boxrule = 0.6pt, arc = 3pt,
+  left = 8pt, right = 8pt, top = 6pt, bottom = 6pt,
+  before skip = 12pt, after skip = 8pt,
+  breakable, lines before break = 3, width = \linewidth
+}
+
+%% ── تنبيه ─────────────────────────────────────────
+\newtcolorbox{warningbox}[1][تنبيه]{
+  enhanced,
+  colback = WarnBg, colframe = WarnBorder,
+  colbacktitle = WarnBorder, coltitle = white,
+  fonttitle = \small\bfseries, title = {#1},
+  boxrule = 0.6pt, arc = 3pt,
+  left = 8pt, right = 8pt, top = 6pt, bottom = 6pt,
+  before skip = 12pt, after skip = 8pt,
+  breakable, lines before break = 3, width = \linewidth
+}
+
+%% ── خلاصة ─────────────────────────────────────────
 \newtcolorbox{takeawaybox}[1][خلاصة القول]{
-  colback=TakeawayBg, colframe=TakeawayBorder,
-  before skip=12pt, fonttitle=\bfseries\small,
-  title={#1}, breakable, lines before break=3,
-  left=8pt, right=8pt, top=6pt, bottom=6pt,
-  boxrule=0.6pt, width=\linewidth
+  enhanced,
+  colback = TakeawayBg, colframe = TakeawayBorder,
+  colbacktitle = TakeawayBorder, coltitle = white,
+  fonttitle = \small\bfseries, title = {#1},
+  boxrule = 0.6pt, arc = 3pt,
+  left = 8pt, right = 8pt, top = 6pt, bottom = 6pt,
+  before skip = 12pt, after skip = 8pt,
+  breakable, lines before break = 3, width = \linewidth
 }
 
-%% ── Maths ───────────────────────────────────────────────────
+%% ── دعاء ──────────────────────────────────────────
+\newtcolorbox{duabox}[1][دعاء]{
+  enhanced,
+  colback = DuaBg, colframe = DuaBorder,
+  colbacktitle = DuaBorder, coltitle = white,
+  fonttitle = \small\bfseries, title = {#1},
+  halign = flush right,
+  boxrule = 0.6pt, arc = 3pt,
+  left = 12pt, right = 12pt, top = 8pt, bottom = 8pt,
+  before skip = 14pt, after skip = 10pt,
+  breakable, lines before break = 3, width = \linewidth
+}
+
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+%% 12. MATHS
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 \usepackage{amsmath}
 \usepackage{amssymb}
 
-%% ── Hyperlinks & Index ──────────────────────────────────────
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+%% 13. HYPERLINKS & INDEX
+%%     hyperref must come last (before custom patches)
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 \PassOptionsToPackage{hyphens}{url}
-\usepackage{hyperref}
+\usepackage[linktocpage, breaklinks, linktoc=all, hidelinks]{hyperref}
 \usepackage{imakeidx}
-\makeindex[columns=2, title=الفهرس, intoc=true]
+\makeindex[columns=2, title=الفهرس الموضوعي, intoc=true]
 \urlstyle{tt}
 
 \hypersetup{
@@ -208,21 +410,59 @@
   citecolor   = BookGreen,
   pdftitle    = {كتاب تدبر القرآن الكريم},
   pdfauthor   = {Haythem Aber},
-  pdfsubject  = {تدبر القرآن الكريم},
-  pdfkeywords = {القرآن, التدبر, التفسير}
+  pdfsubject  = {تدبر القرآن الكريم — منهج علمي منضبط},
+  pdfkeywords = {القرآن, التدبر, التفسير, ابن كثير, ابن عاشور, الشنقيطي}
 }
 
 \usepackage{ragged2e}
 
-%% ── Handy macros ────────────────────────────────────────────
-\newcommand{\ayah}[2]{%        usage: \ayah{آية text}{سورة X: آية Y}
-  \begin{ayahbox}[{#2}]\centering\Large #1\end{ayahbox}%
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+%% 14. CHAPTER STRUCTURE MACROS
+%%     Each chapter file = نصف حزب
+%% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+%% ── نصف الحزب divider ────────────────────────────────────────
+%% Usage: \nisfhizb{1}{1}{سورة الفاتحة ١–٧ + البقرة ١–٥}
+%%   #1 = hizb number (1..60)
+%%   #2 = nisf (1=first half, 2=second half)
+%%   #3 = surah:ayah range description
+\newcommand{\nisfhizb}[3]{%
+  \begin{hizbbox}{نصف الحزب~#2 — الحزب~#1\quad|\quad\small #3}%
+    \centering
+    {\quranfont\large
+      \ifnum#2=1 ۞\else ۝\fi  %% ۞ = hizb mark, ۝ = quarter
+    }\par
+    \vspace{2pt}
+    {\small\color{BookMid} كل فصل في هذا الكتاب يغطي نصف حزب}
+  \end{hizbbox}%
+  \addcontentsline{toc}{section}{نصف الحزب~#2 — الحزب~#1}%
 }
 
+%% ── Quick ayah display (inline, with quranfont) ──────────────
+%% Usage: \ayah{آية text}{سورة X: آية Y}
+\newcommand{\ayah}[2]{%
+  \begin{ayahbox}{#2}%
+    \centering{\quranfont\large #1}%
+  \end{ayahbox}%
+}
+
+%% ── Part close page ──────────────────────────────────────────
 \newcommand{\partclose}[1]{%
   \cleardoublepage
   \vspace*{\fill}
-  \begin{center}\Large\color{BookGreen}#1\end{center}
+  \begin{center}{\Large\color{BookGreen} #1}\end{center}
   \vspace*{\fill}
   \cleardoublepage
 }
+
+%% ── Marginal reference ───────────────────────────────────────
+%% Usage: \mref{ابن كثير، ٢/٥٤}
+\newcommand{\mref}[1]{\marginpar{\tiny\color{BookMid}\raggedright #1}}
+
+%% ── Inline Quranic fragment ──────────────────────────────────
+%% Usage: \qf{الحمد لله رب العالمين}
+\newcommand{\qf}[1]{{\quranfont #1}}
+
+%% ── Scholar attribution ──────────────────────────────────────
+%% Usage: \scholar{ابن كثير رحمه الله}:
+\newcommand{\scholar}[1]{\textbf{\textit{#1}}}

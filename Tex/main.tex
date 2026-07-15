@@ -1,22 +1,27 @@
 %!TEX program = xelatex
 %% ============================================================
-%%  MAIN ENTRY POINT
-%%  كتاب تدبر القرآن الكريم
+%%  MAIN ENTRY POINT — كتاب تدبر القرآن الكريم
 %%
-%%  Compile: latexmk -xelatex -f -interaction=nonstopmode
-%%           -output-directory=Tex/Output Tex/main.tex
+%%  Compile:
+%%    latexmk -xelatex -halt-on-error -interaction=nonstopmode \
+%%             -output-directory=Tex/Output Tex/main.tex
+%%
+%%  Structure: one chapter file = نصف حزب
+%%    120 chapters total (60 أحزاب × 2 نصف)
+%%  We start with chapter01 = نصف الحزب الأول
 %% ============================================================
 
 \input{Tex/preamble}
 
 \gdef\theBookTitle{تدبر القرآن الكريم}
-\gdef\theBookSubtitle{منهج علمي في فهم كلام الله}
+\gdef\theBookSubtitle{منهج علمي منضبط في فهم كلام الله وتطبيقه}
 \gdef\theBookAuthor{Haythem Aber}
 \gdef\theBookYear{2026}
 \gdef\theBookDate{يوليو 2026}
 \gdef\theBookVolume{المجلد الأول}
-\gdef\theBookVolumeScope{المنهج والأسس}
+\gdef\theBookVolumeScope{من الفاتحة إلى البقرة}
 
+%% ── Cover page ───────────────────────────────────────────────
 \newcommand{\makehalftitle}{%
   \cleardoublepage\thispagestyle{empty}\vspace*{\fill}
   \begin{center}
@@ -25,16 +30,23 @@
   \vspace*{\fill}\clearpage}
 
 \newcommand{\makecover}{%
-  \begin{titlepage}\thispagestyle{empty}\vspace*{2cm}
+  \begin{titlepage}\thispagestyle{empty}
+    \vspace*{1.5cm}
     \begin{center}
-      {\large\scshape\theBookVolume\par}\vspace{0.3cm}
-      {\small\itshape\theBookVolumeScope\par}\vspace{1.2cm}
-      \hrule height 0.5pt\par\vspace{1.2cm}
-      {\fontsize{38}{46}\bfseries\selectfont\theBookTitle\par}
-      \vspace{1.2cm}\hrule height 0.5pt\par\vspace{0.8cm}
-      {\fontsize{11}{14}\selectfont\theBookSubtitle\par}
-      \vspace{1.5cm}{\Large\theBookAuthor\par}\vfill
-      {\normalsize\theBookDate\par}\vspace{0.5cm}
+      {\color{BookGold}\rule{0.6\textwidth}{1pt}}\par\vspace{0.4cm}
+      {\large\mdseries\color{BookMid}\theBookVolume}\par
+      {\small\itshape\color{BookMid}\theBookVolumeScope}\par
+      \vspace{0.8cm}
+      {\color{BookGold}\rule{0.6\textwidth}{0.5pt}}\par\vspace{1cm}
+      {\fontsize{34}{42}\bfseries\color{BookGreen}\theBookTitle\par}
+      \vspace{0.6cm}
+      {\color{BookGold}\rule{0.6\textwidth}{0.5pt}}\par\vspace{0.8cm}
+      {\large\color{BookDark}\theBookSubtitle\par}
+      \vspace{1.5cm}
+      {\Large\theBookAuthor\par}
+      \vfill
+      {\color{BookGold}\rule{0.4\textwidth}{1pt}}\par\vspace{0.3cm}
+      {\normalsize\color{BookMid}\theBookDate}
     \end{center}
   \end{titlepage}\nopagecolor}
 
@@ -67,6 +79,13 @@
 \pretocmd{\tableofcontents}{\cleardoublepage}{}{}
 \setcounter{tocdepth}{1}
 
+%% Arabise TOC labels
+\addto\captionsarabic{%
+  \renewcommand{\contentsname}{الفهرس}
+  \renewcommand{\chaptername}{الفصل}
+  \renewcommand{\partname}{الجزء}
+}
+
 %% ============================================================
 \begin{document}
 %% ============================================================
@@ -76,8 +95,8 @@
 \makecover
 \makecopyright
 \makededication{%
-  ﴿كِتَابٌ أَنزَلْنَاهُ إِلَيْكَ مُبَارَكٌ لِّيَدَّبَّرُوا آيَاتِهِ﴾\\
-  سورة ص: 29}
+  ﴿كِتَابٌ أَنزَلْنَاهُ إِلَيْكَ مُبَارَكٌ لِّيَدَّبَّرُوا آيَاتِهِ وَلِيَتَذَكَّرَ أُولُو الْأَلْبَابِ﴾\\
+  {\small\color{BookMid}سورة ص: 29}}
 
 \begin{preface}
 % TODO: نص المقدمة
@@ -90,40 +109,19 @@
 %% ============================================================
 
 %% -----------------------------------------------------------
-%%  الجزء الأول — المنهج والأسس
+%%  الجزء الأول — الحزب الأول
+%%  سورة الفاتحة كاملة + البقرة 1–141
 %% -----------------------------------------------------------
-\part{المنهج والأسس}
-\label{part:manhaj}
+\part{الجزء الأول — سورة الفاتحة وأوائل البقرة}
+\label{part:juz01}
 
-\chapter{مدخل إلى التدبر}
-\label{chap:madkhal}
+\chapter{نصف الحزب الأول}
+\label{chap:hizb01-nisf01}
 \input{Tex/chapters/chapter01}
 
-\chapter{أصول التفسير}
-\label{chap:usool}
-\input{Tex/chapters/chapter02}
+%% More chapters to be added (chapter02..chapter120)
 
-\chapter{قواعد الاستنباط}
-\label{chap:qawaid}
-\input{Tex/chapters/chapter03}
-
-\partclose{نهاية الجزء الأول — المنهج والأسس.\\الجزء الثاني يطبّق المنهج على السور.}
-
-%% -----------------------------------------------------------
-%%  الجزء الثاني — تدبر السور
-%% -----------------------------------------------------------
-\part{تدبر السور}
-\label{part:suwar}
-
-\chapter{تدبر سورة الفاتحة}
-\label{chap:fatiha}
-\input{Tex/chapters/chapter04}
-
-\chapter{تدبر سورة البقرة}
-\label{chap:baqara}
-\input{Tex/chapters/chapter05}
-
-\partclose{نهاية الجزء الثاني.}
+\partclose{نهاية الجزء الأول}
 
 %% ============================================================
 \backmatter
