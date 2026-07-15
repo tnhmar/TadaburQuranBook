@@ -1,0 +1,38 @@
+name: Build Arabic LaTeX Book to PDF
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: ['**']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Create output directory
+        run: mkdir -p Tex/Output
+
+      - name: Compile LaTeX (XeLaTeX via latexmk)
+        uses: xu-cheng/texlive-action@v2
+        with:
+          scheme: full
+          run: |
+            latexmk \
+              -xelatex \
+              -halt-on-error \
+              -file-line-error \
+              -interaction=nonstopmode \
+              -output-directory=Tex/Output \
+              Tex/main.tex
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tadabur-quran-pdf
+          path: Tex/Output/main.pdf
+          if-no-files-found: error

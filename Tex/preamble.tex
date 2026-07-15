@@ -1,0 +1,228 @@
+%% ============================================================
+%%  PREAMBLE — كتاب تدبر القرآن الكريم
+%%  Arabic RTL book — XeLaTeX required.
+%%  Input ONCE from Tex/main.tex.
+%% ============================================================
+
+\documentclass[
+  12pt,
+  twoside,
+  openright
+]{book}
+
+%% ── Language & RTL ──────────────────────────────────────────
+\usepackage{polyglossia}
+\setmainlanguage[numerals=maghrib]{arabic}
+\setotherlanguage{english}
+
+%% ── Fonts ───────────────────────────────────────────────────
+\usepackage{fontspec}
+\setmainfont{Amiri}[
+  Script        = Arabic,
+  Language      = Default,
+  BoldFont      = Amiri Bold,
+  ItalicFont    = Amiri Italic,
+  BoldItalicFont= Amiri Bold Italic
+]
+\newfontfamily\arabicfont[Script=Arabic]{Amiri}
+\newfontfamily\englishfont{TeX Gyre Termes}
+
+%% ── Page geometry ───────────────────────────────────────────
+\usepackage{geometry}
+\geometry{
+  papersize  = {7in, 10in},
+  top        = 1in,
+  bottom     = 1.1in,
+  inner      = 1in,
+  outer      = 0.875in,
+  headheight = 23.07pt,
+  twoside
+}
+\setlength{\headheight}{23.07004pt}
+\addtolength{\topmargin}{-0.00003pt}
+
+%% ── Colours ─────────────────────────────────────────────────
+\usepackage{xcolor}
+\definecolor{BookGreen}      {HTML}{1A5C3A}
+\definecolor{BookDark}       {HTML}{1C1C1E}
+\definecolor{BookMid}        {HTML}{4A4A4A}
+\definecolor{LearnBg}        {HTML}{EEF7EE}
+\definecolor{LearnBorder}    {HTML}{27AE60}
+\definecolor{TipBg}          {HTML}{EAF4FB}
+\definecolor{TipBorder}      {HTML}{2980B9}
+\definecolor{WarningBg}      {HTML}{FEF9E7}
+\definecolor{WarningBorder}  {HTML}{F39C12}
+\definecolor{NoteBg}         {HTML}{F4F4F4}
+\definecolor{NoteBorder}     {HTML}{888888}
+\definecolor{TakeawayBg}     {HTML}{F0F0FF}
+\definecolor{TakeawayBorder} {HTML}{5B4FBE}
+\definecolor{AyahBg}         {HTML}{FFFDE7}
+\definecolor{AyahBorder}     {HTML}{C8A415}
+
+%% ── Typography ──────────────────────────────────────────────
+\usepackage{microtype}
+\usepackage{setspace}
+\setstretch{1.8}   %% Arabic text needs more leading
+
+\usepackage{csquotes}
+\usepackage{parskip}
+\setlength{\parskip}{8pt}
+\setlength{\parindent}{0pt}
+
+\widowpenalty=10000
+\clubpenalty=10000
+\raggedbottom
+\emergencystretch=3em
+
+%% ── Headings ────────────────────────────────────────────────
+\usepackage{needspace}
+\usepackage{etoolbox}
+\preto\section{\needspace{5\baselineskip}}
+\preto\subsection{\needspace{4\baselineskip}}
+
+\usepackage{titlesec}
+\renewcommand{\bottomtitlespace}{0.15\textheight}
+
+\titleformat{\part}[display]
+  {\centering\huge\bfseries\color{BookGreen}}
+  {\large\mdseries\partname\ \thepart}{20pt}{}
+
+\titleformat{\chapter}[display]
+  {\huge\bfseries\color{BookGreen}}
+  {\normalsize\mdseries\chaptertitlename\ \thechapter}{12pt}{}
+\titlespacing*{\chapter}{0pt}{0pt}{24pt}
+
+\titleformat{\section}
+  {\Large\bfseries\color{BookGreen}}
+  {\thesection}{1em}{}
+\titlespacing*{\section}{0pt}{18pt}{6pt}
+
+\titleformat{\subsection}
+  {\large\bfseries\color{BookDark}}
+  {\thesubsection}{1em}{}
+\titlespacing*{\subsection}{0pt}{14pt}{4pt}
+
+%% ── Headers & Footers ───────────────────────────────────────
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\small\color{BookMid}\leftmark}
+\fancyhead[RO]{\small\color{BookMid}\rightmark}
+\fancyfoot[LE,RO]{\small\color{BookMid}\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyfoot[LE,RO]{\small\color{BookMid}\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+}
+
+\makeatletter
+\renewcommand{\cleardoublepage}{%
+  \clearpage
+  \if@twoside
+    \ifodd\c@page\else
+      \thispagestyle{empty}\hbox{}\newpage
+    \fi
+  \fi
+}
+\makeatother
+
+%% ── Tables ──────────────────────────────────────────────────
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{longtable}
+\renewcommand{\arraystretch}{1.5}
+
+%% ── Graphics ────────────────────────────────────────────────
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\captionsetup{
+  font      = {small},
+  labelfont = {bf,color=BookGreen},
+  skip      = 6pt
+}
+
+%% ── Quranic verse box ───────────────────────────────────────
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+\newtcolorbox{ayahbox}[1][]{
+  colback=AyahBg, colframe=AyahBorder,
+  before skip=14pt, after skip=10pt,
+  fonttitle=\bfseries\small,
+  title={#1},
+  breakable, lines before break=3,
+  left=10pt, right=10pt, top=8pt, bottom=8pt,
+  boxrule=0.7pt, width=\linewidth,
+  halign=flush right
+}
+
+\newtcolorbox{tadaburbox}{
+  colback=LearnBg, colframe=LearnBorder,
+  before skip=12pt, fonttitle=\bfseries\small,
+  title={تدبر}, breakable, lines before break=3,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  boxrule=0.6pt, width=\linewidth
+}
+\newtcolorbox{notebox}{
+  colback=NoteBg, colframe=NoteBorder,
+  before skip=12pt, fonttitle=\bfseries\small,
+  title={ملاحظة}, breakable, lines before break=3,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  boxrule=0.6pt, width=\linewidth
+}
+\newtcolorbox{warningbox}{
+  colback=WarningBg, colframe=WarningBorder,
+  before skip=12pt, fonttitle=\bfseries\small,
+  title={تنبيه}, breakable, lines before break=3,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  boxrule=0.6pt, width=\linewidth
+}
+\newtcolorbox{takeawaybox}[1][خلاصة القول]{
+  colback=TakeawayBg, colframe=TakeawayBorder,
+  before skip=12pt, fonttitle=\bfseries\small,
+  title={#1}, breakable, lines before break=3,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  boxrule=0.6pt, width=\linewidth
+}
+
+%% ── Maths ───────────────────────────────────────────────────
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+%% ── Hyperlinks & Index ──────────────────────────────────────
+\PassOptionsToPackage{hyphens}{url}
+\usepackage{hyperref}
+\usepackage{imakeidx}
+\makeindex[columns=2, title=الفهرس, intoc=true]
+\urlstyle{tt}
+
+\hypersetup{
+  colorlinks  = true,
+  linkcolor   = BookGreen,
+  urlcolor    = BookGreen,
+  citecolor   = BookGreen,
+  pdftitle    = {كتاب تدبر القرآن الكريم},
+  pdfauthor   = {Haythem Aber},
+  pdfsubject  = {تدبر القرآن الكريم},
+  pdfkeywords = {القرآن, التدبر, التفسير}
+}
+
+\usepackage{ragged2e}
+
+%% ── Handy macros ────────────────────────────────────────────
+\newcommand{\ayah}[2]{%        usage: \ayah{آية text}{سورة X: آية Y}
+  \begin{ayahbox}[{#2}]\centering\Large #1\end{ayahbox}%
+}
+
+\newcommand{\partclose}[1]{%
+  \cleardoublepage
+  \vspace*{\fill}
+  \begin{center}\Large\color{BookGreen}#1\end{center}
+  \vspace*{\fill}
+  \cleardoublepage
+}

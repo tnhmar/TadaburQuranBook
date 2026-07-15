@@ -1,0 +1,134 @@
+%!TEX program = xelatex
+%% ============================================================
+%%  MAIN ENTRY POINT
+%%  كتاب تدبر القرآن الكريم
+%%
+%%  Compile: latexmk -xelatex -f -interaction=nonstopmode
+%%           -output-directory=Tex/Output Tex/main.tex
+%% ============================================================
+
+\input{Tex/preamble}
+
+\gdef\theBookTitle{تدبر القرآن الكريم}
+\gdef\theBookSubtitle{منهج علمي في فهم كلام الله}
+\gdef\theBookAuthor{Haythem Aber}
+\gdef\theBookYear{2026}
+\gdef\theBookDate{يوليو 2026}
+\gdef\theBookVolume{المجلد الأول}
+\gdef\theBookVolumeScope{المنهج والأسس}
+
+\newcommand{\makehalftitle}{%
+  \cleardoublepage\thispagestyle{empty}\vspace*{\fill}
+  \begin{center}
+    {\LARGE\bfseries\color{BookGreen}\theBookTitle}
+  \end{center}
+  \vspace*{\fill}\clearpage}
+
+\newcommand{\makecover}{%
+  \begin{titlepage}\thispagestyle{empty}\vspace*{2cm}
+    \begin{center}
+      {\large\scshape\theBookVolume\par}\vspace{0.3cm}
+      {\small\itshape\theBookVolumeScope\par}\vspace{1.2cm}
+      \hrule height 0.5pt\par\vspace{1.2cm}
+      {\fontsize{38}{46}\bfseries\selectfont\theBookTitle\par}
+      \vspace{1.2cm}\hrule height 0.5pt\par\vspace{0.8cm}
+      {\fontsize{11}{14}\selectfont\theBookSubtitle\par}
+      \vspace{1.5cm}{\Large\theBookAuthor\par}\vfill
+      {\normalsize\theBookDate\par}\vspace{0.5cm}
+    \end{center}
+  \end{titlepage}\nopagecolor}
+
+\newcommand{\makecopyright}{%
+  \thispagestyle{empty}\vspace*{\fill}
+  \begin{small}
+    \noindent\textit{\theBookTitle}\\
+    \textit{\theBookSubtitle}\\
+    \textit{\theBookVolume: \theBookVolumeScope}\\[12pt]
+    \noindent حقوق النشر \textcopyright{} \theBookYear\ \theBookAuthor.
+    جميع الحقوق محفوظة.\\[8pt]
+    \noindent لا يجوز إعادة إنتاج هذا الكتاب أو نشره أو توزيعه
+    دون إذن خطي مسبق من المؤلف.\\[8pt]
+    \noindent الطبعة الأولى. \theBookDate.
+  \end{small}
+  \vspace*{\fill}\clearpage}
+
+\newcommand{\makededication}[1]{%
+  \cleardoublepage\thispagestyle{empty}\vspace*{\fill}
+  \begin{center}\itshape #1\end{center}
+  \vspace*{\fill}\clearpage}
+
+\newenvironment{preface}{%
+  \cleardoublepage
+  \chapter*{مقدمة}
+  \addcontentsline{toc}{chapter}{مقدمة}
+  \markboth{مقدمة}{مقدمة}%
+}{\clearpage}
+
+\pretocmd{\tableofcontents}{\cleardoublepage}{}{}
+\setcounter{tocdepth}{1}
+
+%% ============================================================
+\begin{document}
+%% ============================================================
+
+\frontmatter
+\makehalftitle
+\makecover
+\makecopyright
+\makededication{%
+  ﴿كِتَابٌ أَنزَلْنَاهُ إِلَيْكَ مُبَارَكٌ لِّيَدَّبَّرُوا آيَاتِهِ﴾\\
+  سورة ص: 29}
+
+\begin{preface}
+% TODO: نص المقدمة
+\end{preface}
+
+\tableofcontents
+
+%% ============================================================
+\mainmatter
+%% ============================================================
+
+%% -----------------------------------------------------------
+%%  الجزء الأول — المنهج والأسس
+%% -----------------------------------------------------------
+\part{المنهج والأسس}
+\label{part:manhaj}
+
+\chapter{مدخل إلى التدبر}
+\label{chap:madkhal}
+\input{Tex/chapters/chapter01}
+
+\chapter{أصول التفسير}
+\label{chap:usool}
+\input{Tex/chapters/chapter02}
+
+\chapter{قواعد الاستنباط}
+\label{chap:qawaid}
+\input{Tex/chapters/chapter03}
+
+\partclose{نهاية الجزء الأول — المنهج والأسس.\\الجزء الثاني يطبّق المنهج على السور.}
+
+%% -----------------------------------------------------------
+%%  الجزء الثاني — تدبر السور
+%% -----------------------------------------------------------
+\part{تدبر السور}
+\label{part:suwar}
+
+\chapter{تدبر سورة الفاتحة}
+\label{chap:fatiha}
+\input{Tex/chapters/chapter04}
+
+\chapter{تدبر سورة البقرة}
+\label{chap:baqara}
+\input{Tex/chapters/chapter05}
+
+\partclose{نهاية الجزء الثاني.}
+
+%% ============================================================
+\backmatter
+%% ============================================================
+
+\printindex
+
+\end{document}
