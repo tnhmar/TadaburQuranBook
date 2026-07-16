@@ -66,9 +66,10 @@
 %% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 \usepackage[uthmani]{quran}
 
-%% Wrap every quran text call in \quranfont
-%% (quran pkg uses \quranfont if defined — define it above is enough;
-%%  we also patch \qurantextfont for safety)
+%% The quran package may or may not define \qurantextfont depending on
+%% the version. Use \providecommand so we define it if missing, and
+%% then override it at document start to use our \quranfont.
+\providecommand{\qurantextfont}{}
 \AtBeginDocument{\renewcommand{\qurantextfont}{\quranfont}}
 
 %% ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
